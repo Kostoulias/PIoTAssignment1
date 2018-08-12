@@ -21,13 +21,6 @@ def uploadData (t,h):
     con.commit()
     con.close()
     
-#def uploadHumid (humid):
-#    conn=sqlite3.connect(dbname)
-#    curs=conn.cursor()
-#    curs.execute("INSERT INTO SENSEHAT_data values(datetime('now')), (?))", (humid,))
-#    conn.commit()
-#    conn.close()
-
 # display database data
 def displayData():
     conn=sqlite3.connect(dbname)

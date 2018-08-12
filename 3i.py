@@ -2,8 +2,19 @@ from sense_hat import SenseHat
 sense = SenseHat()
 sense.clear()
 
-temp = sense.get_temperature()
-humid = sense.get_humidity()
-sense.show_message('Temp: {0:0.1f} *c'.format(temp), scroll_speed=0.05)
-sense.show_message('Humidity: {0:0.2f}%'.format(humid), scroll_speed=0.05)
+#defining the colours
+red = (255,0,0)
+green = (0,255,0)
+blue = (0,0,255)
+t = sense.get_temperature()
+h = sense.get_humidity()
+
+if t > 18 and t < 30:
+    bg = green
+else:
+    bg = red
+
+sense.show_message('Temp: {0:0.1f} *c'.format(t), scroll_speed=0.05, back_colour=bg)
+sense.show_message('Humidity: {0:0.1f}%'.format(h), scroll_speed=0.05, back_colour=blue)
 sense.clear()
+

@@ -2,51 +2,45 @@ import time
 import sqlite3
 from sense_hat import SenseHat
 dbname='database.db'
-sampleFreq = 1 # time in seconds
+sampleFreq = 5 # time in seconds
 
 # get data from SenseHat sensor
-def getdatabaseData():	
+def getDatabaseData():	
     sense = SenseHat()
-    temp = sense.get_temperature()
+    t = sense.get_temperature()
+    h = sense.get_humidity()    
+    t = round(t, 1)
+    h =  round(h, 1)
+    uploadData (t,h)
 
-    if temp is not None:
-        temp = round(temp, 1)
-        logData (temp)
-
-    humid = sense.get_humidity()
-
-    if humid is not None:
-        humid =  round(humid, 1)
-        logData (humid)
-   
 # log sensor data on database
-def logData (temp):	
-    conn=sqlite3.connect(dbname)
-    curs=conn.cursor()
-    curs.execute("INSERT INTO SENSEHAT_data values(datetime('now'), (?))", (temp,))
-    conn.commit()
-    conn.close()
+def uploadData (t,h):	
+    con=sqlite3.connect(dbname)
+    curs=con.cursor()
+    curs.execute("INSERT INTO DATABASE_data(timestamp, temp, humidity) values(datetime('now'), (?), (?))", (t,h))
+    con.commit()
+    con.close()
     
-def logData (humid):
-    conn=sqlite3.connect(dbname)
-    curs=conn.cursor()
-    curs.execute("INSERT INTO SENSEHAT_data values(datetime('now')), (?))", (humid,))
-    conn.commit()
-    conn.close()
+#def uploadHumid (humid):
+#    conn=sqlite3.connect(dbname)
+#    curs=conn.cursor()
+#    curs.execute("INSERT INTO SENSEHAT_data values(datetime('now')), (?))", (humid,))
+#    conn.commit()
+#    conn.close()
 
 # display database data
 def displayData():
     conn=sqlite3.connect(dbname)
     curs=conn.cursor()
     print ("\nEntire database contents:\n")
-    for row in curs.execute("SELECT * FROM SENSEHAT_data"):
+    for row in curs.execute("SELECT * FROM DATABASE_data"):
         print (row)
     conn.close()
 
 # main function
 def main():
-    for i in range (0,3):
-        getdatabaseData()
+    for i in range (0,1):
+        getDatabaseData()
         time.sleep(sampleFreq)
     displayData()
 

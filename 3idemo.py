@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 import time
 import sqlite3
 from sense_hat import SenseHat
-dbname='database.db'
+dbname='/home/pi/A01/database.db'
 sampleFreq = 5 # time in seconds
 
 # get data from SenseHat sensor

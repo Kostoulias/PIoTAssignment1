@@ -8,7 +8,7 @@ sampleFreq = 1 # time in seconds
 # get data from SenseHat sensor
 def getDatabaseData():	
     sense = SenseHat()
-    t = sense.get_temperature_from_humidity()
+    t = sense.get_temperature()
     h = sense.get_humidity()    
     t = round(t, 1)
     h =  round(h, 1)

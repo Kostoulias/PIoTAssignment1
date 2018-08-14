@@ -51,6 +51,8 @@ def main():
     temp = sense.get_temperature()
     if temp <= 20:
         send_notification_via_pushbulletjames('Temp: {0:0.1f} *c'.format(temp), "It's cold! Bring a sweater.")
+        send_notification_via_pushbulletkhoa('Temp: {0:0.1f} *c'.format(temp), "It's cold! Bring a sweater.")
+
     else:  
         sense.show_message('Temp: {0:0.1f} *c'.format(temp), scroll_speed=0.05)
         sense.clear()

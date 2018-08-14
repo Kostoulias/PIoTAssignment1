@@ -3,12 +3,12 @@ import time
 import sqlite3
 from sense_hat import SenseHat
 dbname='/home/pi/A01/database.db'
-sampleFreq = 5 # time in seconds
+sampleFreq = 1 # time in seconds
 
 # get data from SenseHat sensor
 def getDatabaseData():	
     sense = SenseHat()
-    t = sense.get_temperature()
+    t = sense.get_temperature_from_humidity()
     h = sense.get_humidity()    
     t = round(t, 1)
     h =  round(h, 1)
@@ -33,7 +33,7 @@ def displayData():
 
 # main function
 def main():
-    for i in range (0,1):
+    for i in range (0,4):
         getDatabaseData()
         time.sleep(sampleFreq)
     displayData()

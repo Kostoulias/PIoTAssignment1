@@ -8,61 +8,52 @@ dbname = '/home/pi/A01/bluetoothdatabase.db'
 
 # Main function
 def main():
-    #user_name = input("Enter your name: ")
-    #device_name = input("Enter the name of your phone: ")
-    nearby_devices = bluetooth.discover_devices()
-    for mac_address in nearby_devices:
+    #Pi will search for detectable bluetooth devices and their device names
+    nearby_devices = bluetooth.discover_devices(lookup_names = True)
+    #Will run loops based on the amount of devices it finds
+    for mac_address, name in nearby_devices:
         device_address = mac_address
+        device_name = name
+        #Access database and see if it matches any of the currently discoverable devices, else insert the new devices into database
         conn=sqlite3.connect(dbname)
         curs=conn.cursor()
         curs.fetchone()
-        curs.execute("SELECT deviceaddress FROM BLUETOOTH_data WHERE deviceaddress= ?", (device_address,))
+        curs.execute("SELECT * FROM BLUETOOTH_data WHERE devicename= ? AND deviceaddress= ?", (device_name, device_address,))
         found = curs.fetchone()
         if found:
-            print(device_address)
+            displayGreetings(device_name, device_address)
         else:
-            #print("Not found!")
-            user_name = input("Enter your name: ")
-            device_name = input("Enter the name of your phone: ")
-            search(user_name, device_name)
+            insertDevice(device_name, device_address)
 
-
-# Search for device based on device's name
-def search(user_name, device_name):
-    nearby_devices = bluetooth.discover_devices()
-    for mac_address in nearby_devices:
-        device_address = mac_address
+def displayGreetings(device_name, device_address):
+    #Grabs current date and time and formats into readable format.
     dt = time.strftime("%a, %d %b %y %H:%M:%S", time.localtime())
     print("\nCurrently: {}".format(dt))
-    time.sleep(3) #Sleep three seconds 
+    time.sleep(3) #Sleeps three seconds 
+    #Grabs information from database to display message and information of device.
     conn=sqlite3.connect(dbname)
     curs=conn.cursor()
-    curs.fetchone()
-    curs.execute("SELECT * FROM BLUETOOTH_data WHERE username= ? and devicename= ?", (user_name, device_name))
-    found = curs.fetchone()
-    if found:
-        print("Hi {}! Your phone ({}) has the MAC address: {}".format(user_name, device_name, device_address))
-        sense = SenseHat()
-        temp = round(sense.get_temperature(), 1)
-        sense.show_message("Hi {}! Current Temp is {}*c".format(user_name, temp), scroll_speed=0.05)
-        conn=sqlite3.connect(dbname)
-        curs=conn.cursor()
-        print ("\nEntire database contents:\n")
-        for row in curs.execute("SELECT * FROM BLUETOOTH_data"):
-            print (row)
-        conn.close()
-        #else:
-        #    print("Could not find target device nearby...")
-    else:
-        for mac_address in nearby_devices:
-            if device_name == bluetooth.lookup_name(mac_address, timeout=5):
-                device_address = mac_address
-                con=sqlite3.connect(dbname)
-                curs=con.cursor()
-                curs.execute("INSERT INTO BLUETOOTH_data(username, devicename, deviceaddress) values((?), (?), (?))", (user_name, device_name, device_address))
-                con.commit()
-                con.close()
-                break
-        #if SELECT deviceadress FROM BLUETOOTH == device_address
-#Execute program
+    curs.execute("SELECT * FROM BLUETOOTH_data WHERE deviceaddress= ?", (device_address,))
+    print("Hello! Your device ({}) has the MAC address: {}".format(device_name, device_address))
+    sense = SenseHat()
+    temp = round(sense.get_temperature(), 1)
+    sense.show_message("Hi {}! Current Temp is {}*c".format(device_name, temp), scroll_speed=0.05)
+    conn=sqlite3.connect(dbname)
+    curs=conn.cursor()
+    #Optional: Prints entire database content to show registered devices
+    print ("\nEntire database contents:\n")
+    for row in curs.execute("SELECT * FROM BLUETOOTH_data"):
+        print (row)
+    conn.close()
+
+def insertDevice(device_name, device_address):
+    #Insert new device information into database and then run function to display greeting.
+    print("\nThe following device information will be inserted into the database:\n {} {}".format(device_name, device_address))
+    con=sqlite3.connect(dbname)
+    curs=con.cursor()
+    curs.execute("INSERT INTO BLUETOOTH_data(devicename, deviceaddress) values((?), (?))", (device_name, device_address))
+    con.commit()
+    con.close()
+    displayGreetings(device_name, device_address)
+
 main()

@@ -14,14 +14,9 @@ dt_utcnow = datetime.datetime.now(tz=pytz.UTC) #UTC Timezone
 dt_aest = dt_utcnow.astimezone(pytz.timezone('Australia/Melbourne')) #Melbourne Timezone
 
 
-def get_cpu_temp():
-  res = os.popen("vcgencmd measure_temp").readline()
-  t = float(res.replace("temp=","").replace("'C\n",""))
-  return(t)
 # get data from SenseHat sensor
 def getDatabaseData():	
     sense = SenseHat()
-   # t_cpu = get_cpu_temp()
     t = sense.get_temperature()
     t_corr = t - 21
     h = sense.get_humidity()    

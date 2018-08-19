@@ -6,8 +6,6 @@ from sense_hat import SenseHat
 sense = SenseHat()
 sense.clear()
 
-
-
 #Access token is unique to account. Replace with your own on Pushbullet website
 JAMES_ACCESS_TOKEN="o.jzjUdnNHMOeAr5wZVJ3m8uxNMcencmMr"
 KHOA_ACCESS_TOKEN="o.8b1mohrt0GzsLHCOTpirAlvQ3iuEjEJW"
@@ -55,8 +53,7 @@ def main():
     if temp_corr <= 20:
         send_notification_via_pushbulletjames('Temp: {0:0.1f} *c'.format(temp_corr), "It's cold! Bring a sweater.")
         send_notification_via_pushbulletkhoa('Temp: {0:0.1f} *c'.format(temp_corr), "It's cold! Bring a sweater.")
-
-    else:  
+    else:
         sense.show_message('Temp: {0:0.1f} *c'.format(temp), scroll_speed=0.05)
         sense.clear()
 #Execute main

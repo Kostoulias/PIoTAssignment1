@@ -2,7 +2,6 @@
 import requests
 import json
 import os
-
 from sense_hat import SenseHat
 sense = SenseHat()
 sense.clear()
@@ -12,6 +11,8 @@ sense.clear()
 #Access token is unique to account. Replace with your own on Pushbullet website
 JAMES_ACCESS_TOKEN="o.jzjUdnNHMOeAr5wZVJ3m8uxNMcencmMr"
 KHOA_ACCESS_TOKEN="o.8b1mohrt0GzsLHCOTpirAlvQ3iuEjEJW"
+
+#Sending notification to James Kostoulias
 def send_notification_via_pushbulletjames(title, body):
     """ Sending notification via pushbullet.
         Args:
@@ -27,6 +28,7 @@ def send_notification_via_pushbulletjames(title, body):
     else:
         print('Complete sending')
 
+#Sending notification to Khoa Ngyuyen
 def send_notification_via_pushbulletkhoa(title, body):
     """ Sending notification via pushbullet.
         Args:
@@ -49,9 +51,10 @@ def send_notification_via_pushbulletkhoa(title, body):
 #if over 20 degrees then display current temp reading to sense hat
 def main():
     temp = sense.get_temperature()
-    if temp <= 20:
-        send_notification_via_pushbulletjames('Temp: {0:0.1f} *c'.format(temp), "It's cold! Bring a sweater.")
-        send_notification_via_pushbulletkhoa('Temp: {0:0.1f} *c'.format(temp), "It's cold! Bring a sweater.")
+    temp_corr = temp - 21
+    if temp_corr <= 20:
+        send_notification_via_pushbulletjames('Temp: {0:0.1f} *c'.format(temp_corr), "It's cold! Bring a sweater.")
+        send_notification_via_pushbulletkhoa('Temp: {0:0.1f} *c'.format(temp_corr), "It's cold! Bring a sweater.")
 
     else:  
         sense.show_message('Temp: {0:0.1f} *c'.format(temp), scroll_speed=0.05)

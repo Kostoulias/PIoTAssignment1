@@ -16,7 +16,7 @@ sampleFreq = 1 # time in seconds
 
 
 dt_utcnow = datetime.datetime.now(tz=pytz.UTC) #UTC Timezone
-dt_aest = dt_utcnow.astimezone(pytz.timezone('Australia/Melbourne')) #Melbourne Timezone
+
 
 
 # get data from SenseHat sensor
@@ -61,7 +61,6 @@ def graph_data():
     timestamp = []
     humidity = []
    
-
     for row in data:
         humidity.append(row['humidity'])
         timestamp.append(parser.parse(row['timestamp']))
@@ -78,6 +77,5 @@ def main():
         getDatabaseData()
         time.sleep(sampleFreq)
     displayData()
-    graph_data()
 # Execute program 
 main()

@@ -5,6 +5,11 @@ import datetime
 import sqlite3
 import os
 from sense_hat import SenseHat
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from dateutil import parser
+from matplotlib import style
 dbname='/home/pi/A01/database.db'
 sampleFreq = 1 # time in seconds
 
@@ -43,12 +48,36 @@ def displayData():
         print (row)
     conn.close()
 
+def graph_data():
+    # Connect to database
+    db = '/home/pi/A01/database.db'
+    conn = sqlite3.connect(db)
+    c = conn.cursor()
+    style.use('fivethirtyeight')
+
+    c.execute('SELECT timestamp, humidity FROM DATABASE_data')
+    data = c.fetchall()
+
+    timestamp = []
+    humidity = []
+   
+
+    for row in data:
+        humidity.append(row['humidity'])
+        timestamp.append(parser.parse(row['timestamp']))
+        
+
+    plt.plot_date(humidity, '-')
+    plt.savefig('/home/pi/WebService/templates/Index.html')
+    c.close()
+    conn.close()
+
 # main function
 def main():
     for i in range (0,4):
         getDatabaseData()
         time.sleep(sampleFreq)
     displayData()
-
+    graph_data()
 # Execute program 
 main()
